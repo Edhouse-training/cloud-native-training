@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  database:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    image: my-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://database:6379
+    depends_on:
+      - database
+
+  frontend:
+    image: my-frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - API_BASE_URL=http://localhost:3000
+    depends_on:
+      - backend

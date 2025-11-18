@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    app: {{ .Release.Name }}-backend
+spec:
+  minReadySeconds: 60
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend
+    spec:
+      # This will wait for redis to be ready
+      initContainers:
+      - name: wait-for-redis
+        image: busybox
+        command: ['sh', '-c', 'until nc -z {{ .Release.Name }}-redis-master 6379; do echo waiting for redis; sleep 2; done;']
+      containers:
+      - args: []
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-redis
+              key: redis-password
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-backend
+        image: {{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}
+        imagePullPolicy: IfNotPresent
+        name: {{ .Release.Name }}-backend
+        ports:
+        - containerPort: 3000
+          name: http
+      terminationGracePeriodSeconds: 10

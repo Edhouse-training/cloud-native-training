@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-for-my-app
+data:
+  MY_ENVIRONMENT_VARIABLE: "value I need"

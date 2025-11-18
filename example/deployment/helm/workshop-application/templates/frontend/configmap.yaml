@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Release.Name }}-frontend
+  name: {{ .Release.Name }}-frontend
+data:
+  BACKEND_ADDRESS: {{ .Release.Name }}-backend:3000

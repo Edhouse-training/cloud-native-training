@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app-pod
+  labels:
+    app: my-app-pod
+    environment: upol
+    group: cloud-native-workshop
+spec:
+  containers:
+    - name: my-app
+      image: my-frontend
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 3001
+      resources:
+        requests:
+          memory: 10Mi
+          cpu: 10m
+        limits:
+          memory: 20Mi
+          cpu: 20m
+  terminationGracePeriodSeconds: 10

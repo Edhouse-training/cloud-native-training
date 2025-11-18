@@ -1,0 +1,18 @@
+backend:
+  image:
+    name: my-backend
+    tag: latest
+
+frontend:
+  image:
+    name: my-frontend
+    tag: latest
+
+#override dependecy values - original image tag is not found on docker.io
+redis:
+  auth:
+    enabled: true
+    password: "" # Empty password is auto-generated
+  architecture: standalone
+  image:
+    tag: latest

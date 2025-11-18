@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Frontend</title>
+</head>
+<body>
+<h3>My Frontend</h3>
+
+<form id="textForm">
+    <input type="text" id="textInput" placeholder="Zadej text" required />
+    <button type="submit">Save message</button>
+</form>
+
+<br>
+
+<button id="getMessage">Read message</button>
+
+<p>Message from server: <span id="message"></span></p>
+
+
+
+<script>
+    document.getElementById('textForm').addEventListener('submit', (event) => {
+        event.preventDefault()
+        document.getElementById('message').textContent = ''
+        const text = document.getElementById('textInput').value
+
+        fetch('<%= apiBaseUrl %>/api/save-message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: text }),
+        })
+            .then(response => response.json())
+            .then(data => document.getElementById('message').textContent = data.message)
+            .catch(error => console.error('Error:', error))
+    })
+
+    document.getElementById('getMessage').addEventListener('click', () => {
+        fetch('<%= apiBaseUrl %>/api/get-message')
+            .then(response => response.json())
+            .then(data => document.getElementById('message').textContent = data.message || "no value")
+            .catch(error => console.error('Error:', error))
+    })
+</script>
+</body>
+</html>
