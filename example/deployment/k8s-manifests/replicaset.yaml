@@ -17,7 +17,7 @@ spec:
           image: my-frontend
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
+            - containerPort: 3001
           resources:
             requests:
               memory: 10Mi
